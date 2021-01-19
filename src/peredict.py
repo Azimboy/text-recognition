@@ -5,12 +5,11 @@ import cv2
 import numpy as np
 from tensorflow import keras
 
-from src.operations import load_image_with_channel_from_path
 
 emnist_labels = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
                  81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
                  110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122]
-model = keras.models.load_model('../models/emnist_letters.h5')
+model = keras.models.load_model('/content/text-recognition/models/emnist_letters.h5')
 
 
 def emnist_predict_img(img):
@@ -29,20 +28,18 @@ def get_word_char_indexes(filename):
     parts = filename.split('_')
     return int(parts[0]), int(parts[1].split('.')[0])
 
-
 def peredict():
     i = 1
     line = ""
     while True:
-        file_list = glob.glob("../resources/" + str(i) + "_*.png")
+        file_list = glob.glob("/content/text-recognition/resources/" + str(i) + "_*.png")
         if len(file_list) == 0:
             break
-
         j = 0
         while True:
-            my_file = Path("../resources/" + str(i) + "_" + str(j) + ".png")
+            my_file = Path("/content/text-recognition/resources/" + str(i) + "_" + str(j) + ".png")
             if my_file.is_file():
-                img = load_image_with_channel_from_path(str(my_file))
+                img = load_image_with_channel(str(my_file))
                 s_out = emnist_predict_img(img)
                 line = line + s_out
                 j = j + 1
@@ -55,4 +52,4 @@ def peredict():
             line = line + " "
         i = i + 1
 
-    print(line)
+    return line

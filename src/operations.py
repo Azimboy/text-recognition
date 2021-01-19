@@ -1,29 +1,20 @@
 import cv2
 import numpy as np
+import concurrent.futures
 
 
-def load_image_from_path(path):
+def load_image(path):
     return cv2.imread(path)
 
 
-def load_image_with_channel_from_path(path):
+def load_image_with_channel(path):
     return cv2.imread(path, 0)
 
 
-def save_image_to(image, destination, filename):
-    return cv2.imwrite(str(destination) + '/' + str(filename), image)
-
-
-def save_images_to(chars, destination, word_index):
+def save_images(chars, destination, word_index):
     for index, char in enumerate(chars):
         char = cv2.resize(char, (28, 28))
-        save_image_to(char, str(destination), str(word_index) + "_" + str(index) + ".png")
-
-
-def progress(image, destination):
-    words = get_words(image)
-    for index, chars in enumerate(words):
-        save_images_to(chars, destination, index + 1)
+        cv2.imwrite(str(destination) + '/' + str(str(word_index) + "_" + str(index) + ".png"), char)
 
 
 def get_words(image):
@@ -90,3 +81,9 @@ def get_words(image):
                 words.append(chars)
 
     return words
+
+def process(image, destination):
+    words = get_words(image)
+    with concurrent.futures.ProcessPoolExecutor(max_workers=10) as executor:
+        for index, chars in enumerate(words):
+            executor.submit(save_images, chars, destination, index + 1)
