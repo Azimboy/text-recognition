@@ -14,7 +14,7 @@ def emnist_model():
     model.add(
         Convolution2D(filters=32, kernel_size=(3, 3), padding='valid', input_shape=(28, 28, 1), activation='relu'))
     model.add(Convolution2D(filters=64, kernel_size=(3, 3), activation='relu'))
-    emnist_path = '../emnist/'
+    emnist_path = '/content/text-recognition/emnist/'
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
     model.add(Flatten())
@@ -27,7 +27,7 @@ def emnist_model():
 
 def train():
     model = emnist_model()
-    emnist_path = '../emnist/'
+    emnist_path = '/content/text-recognition/emnist/'
 
     X_train = idx2numpy.convert_from_file(emnist_path + 'emnist-byclass-train-images-idx3-ubyte')
     y_train = idx2numpy.convert_from_file(emnist_path + 'emnist-byclass-train-labels-idx1-ubyte')
@@ -65,8 +65,7 @@ def train():
     model.fit(X_train, x_train_cat, validation_data=(X_test, y_test_cat), callbacks=[learning_rate_reduction],
               batch_size=64, epochs=30)
 
-    model.save('../models/emnist_letters.h5')
+    model.save('/content/text-recognition/models/emnist_letters_new.h5')
 
 
-if __name__ == "__main__":
-    train()
+train()
